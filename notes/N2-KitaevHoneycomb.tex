@@ -1,0 +1,336 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{\textbf{Note 2: Kitaev's Solution to the Honeycomb Model}}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section*{1. The Kitaev Honeycomb Model}
+
+Consider a 2D honeycomb lattice with localized spin-1/2 degrees of freedom at each site. The lattice is bipartite, partitioned into sublattices $A$ and $B$, with coordination number $z = 3$.
+
+There are three distinct types of bonds connecting nearest-neighbor $A$ and $B$ sublattice sites:
+\begin{enumerate}
+    \item $x$-bonds (positive slope)
+    \item $y$-bonds (negative slope)
+    \item $z$-bonds (vertical)
+\end{enumerate}
+
+The spins interact via highly anisotropic nearest-neighbor Ising exchange interactions:
+\begin{equation}
+    H = -J_x \sum_{x\text{-bonds}} \sigma_j^x \sigma_k^x - J_y \sum_{y\text{-bonds}} \sigma_j^y \sigma_k^y - J_z \sum_{z\text{-bonds}} \sigma_j^z \sigma_k^z,
+\end{equation}
+where $(J_x, J_y, J_z)$ are coupling constants, and $\sigma_j^\alpha$ ($\alpha \in \{x, y, z\}$) is the Pauli matrix at site $j$.
+
+This is a \textbf{compass model}: the spin component taking part in the exchange interaction is determined via the spatial orientation of the bond. 
+
+Because of this, any given spin cannot minimize all its interactions simultaneously. In other words, $\{\sigma_i^x, \sigma_i^y, \sigma_i^z\}$ do not commute with each other, and thus bond terms do not commute with the Hamiltonian.
+
+\paragraph{Verification of Exchange Frustration:}
+Let us define the bond terms sharing site $1$:
+\begin{equation}
+    K_x = -J_x \sigma_1^x \sigma_2^x, \quad K_y = -J_y \sigma_1^y \sigma_3^y, \quad K_z = -J_z \sigma_1^z \sigma_4^z.
+\end{equation}
+Computing the commutator of $K_x$ and $K_y$ explicitly:
+\begin{align}
+    [K_x, K_y] &= J_x J_y [\sigma_1^x \sigma_2^x, \sigma_1^y \sigma_3^y] \nonumber \\
+    &= J_x J_y \left( \sigma_1^x \sigma_2^x \sigma_1^y \sigma_3^y - \sigma_1^y \sigma_3^y \sigma_1^x \sigma_2^x \right) \nonumber \\
+    &= J_x J_y \left( \sigma_1^x \sigma_1^y - \sigma_1^y \sigma_1^x \right) \sigma_2^x \sigma_3^y \nonumber \\
+    &= J_x J_y [\sigma_1^x, \sigma_1^y] \sigma_2^x \sigma_3^y \nonumber \\
+    &= 2i J_x J_y \sigma_1^z \sigma_2^x \sigma_3^y \neq 0.
+\end{align}
+The same applies for all other bond pairs sharing a site. Simultaneous eigenstates are not possible! As described in Note 1, mapping such a spin-1/2 Hamiltonian to free fermionic fields (\textbf{fermionization}) is a standard technique to solve this problem.
+
+
+\section*{2. Enlarging the Hilbert Space and Fractionalization}
+
+\paragraph{Step 1: Introducing 2 Dirac Fermions per Site}
+At a given site right now, we have a 2D Hilbert space, leading to a $2^N \times 2^N$ Hamiltonian space. Replace each spin-1/2 at any site $j$ with 2 spinless Dirac fermions, each of a different flavour (i.e. discernible): $d_{1,j}$ and $d_{2,j}$ (where $d_{\alpha,j}$ is the annihilation operator for flavour-$\alpha$ Dirac fermion at site $j$).
+
+Now, each site is 4D, with occupation number / Fock states given by $\{|0,0\rangle, |1,0\rangle, |0,1\rangle, |1,1\rangle\}$.
+For the entire problem, we now have a total Hilbert space dimension of $4^N = 2^{2N}$. This means artificial unphysical states have been introduced at this step, which must be projected out later.
+
+The $d_{1/2,j}$ operators create a complex field, as $d^\dagger \neq d$. We could generate a decomposition of the Pauli matrices at each site into these operators, but we do not.
+
+\paragraph{Step 2: Fractionalize into Majorana Fermions}
+A Majorana fermion is defined by a strict reality condition imposed upon its creation/annihilation operators: $\gamma^\dagger = \gamma$, with $\{\gamma^\alpha, \gamma^\beta\} = 2\delta^{\alpha\beta}$. The Majorana fermion is its own antiparticle.
+
+Since we have 2 complex fields $(d_{1,j}, d_{2,j})$ at each site $j$, we extract real and imaginary parts of these fields via obvious linear combinations:
+\begin{align}
+    \gamma_{1,j} &= \frac{1}{\sqrt{2}} \left( d_{1,j} + d_{1,j}^\dagger \right), \\
+    \gamma_{2,j} &= \frac{-i}{\sqrt{2}} \left( d_{1,j} - d_{1,j}^\dagger \right), \\
+    \gamma_{3,j} &= \frac{1}{\sqrt{2}} \left( d_{2,j} + d_{2,j}^\dagger \right), \\
+    \gamma_{4,j} &= \frac{-i}{\sqrt{2}} \left( d_{2,j} - d_{2,j}^\dagger \right).
+\end{align}
+
+
+\section*{3. Majorana Representation and the $\mathbb{Z}_2$ Gauge Field}
+
+We re-christen these Majorana operators at each site as:
+\begin{itemize}
+    \item \textbf{Itinerant Majorana (sort of like a matter particle):} $c_j = \gamma_{1,j}$
+    \item \textbf{3 Localized Majoranas:} $b_j^x = \gamma_{2,j}, \quad b_j^y = \gamma_{3,j}, \quad b_j^z = \gamma_{4,j}$
+\end{itemize}
+
+\paragraph{Verification of Anticommutation Relations of Majorana Fermions:}
+Let us verify $\{c_j, b_j^x\}$ explicitly:
+\begin{align}
+    \{c_j, b_j^x\} &= \left\{ \frac{1}{\sqrt{2}}(d_{1,j} + d_{1,j}^\dagger), \frac{-i}{\sqrt{2}}(d_{1,j} - d_{1,j}^\dagger) \right\} \nonumber \\
+    &= \frac{-i}{2} \left( \{d_{1,j}, d_{1,j}\} - \{d_{1,j}, d_{1,j}^\dagger\} + \{d_{1,j}^\dagger, d_{1,j}\} - \{d_{1,j}^\dagger, d_{1,j}^\dagger\} \right) \nonumber \\
+    &= \frac{-i}{2} \left( 0 - 1 + 1 - 0 \right) = 0.
+\end{align}
+Similarly, all different Majorana operators on-site and off-site anti-commute cleanly. Fermionization is achieved as the algebra is no longer hard-core boson-esque!
+
+\paragraph{Step 3: Decompose Pauli Matrices into Majorana Operators}
+Kitaev proposed the following decomposition:
+\begin{equation}
+    \sigma_j^\alpha = i b_j^\alpha c_j \quad \forall\, \alpha \in \{x,y,z\}.
+\end{equation}
+
+Let us look at how this changes the Kitaev interaction term:
+\begin{align}
+    -J_\alpha \sigma_j^\alpha \sigma_k^\alpha &= -J_\alpha (i b_j^\alpha c_j)(i b_k^\alpha c_k) \nonumber \\
+    &= -J_\alpha (i^2) (b_j^\alpha c_j b_k^\alpha c_k) \nonumber \\
+    &= J_\alpha (i b_j^\alpha b_k^\alpha) c_j c_k.
+\end{align}
+Why? This isolates the interacting term effectively!
+
+Redefine as a local bond operator:
+\begin{equation}
+    u_{jk} = i b_j^\alpha b_k^\alpha.
+\end{equation}
+$u_{jk}$ is defined on the bonds. Since all interaction terms now possess this $u_{jk}$ factor, we have $u_{\langle j,k \rangle} \Rightarrow u_{jk}$ are constants of motion, i.e., $[u_{jk}, H] = 0$. These allow for $c$-Majorana hopping!
+
+Note:
+\begin{align}
+    (u_{jk})^2 &= (i b_j^\alpha b_k^\alpha)(i b_j^\alpha b_k^\alpha) \nonumber \\
+    &= (-1) (b_j^\alpha b_k^\alpha b_j^\alpha b_k^\alpha) \nonumber \\
+    &= (-1) (-1) (b_j^\alpha)^2 (b_k^\alpha)^2 = 1.
+\end{align}
+Eigenvalues of $u_{jk} = \{-1, +1\}$; it is a $\mathbb{Z}_2$ variable!
+
+\paragraph{Verification of the Commutation Relations of $u_{jk}$:}
+Let us focus on some site $j$, connected to an $x$-bond $\langle j,i \rangle$ and a $y$-bond $\langle j,k \rangle$:
+\begin{align}
+    u_{ji} u_{jk} &= (i b_j^x b_i^x)(i b_j^y b_k^y) = - b_j^x b_i^x b_j^y b_k^y = - b_j^x (-b_j^y b_i^x) b_k^y = b_j^x b_j^y b_i^x b_k^y, \\
+    u_{jk} u_{ji} &= (i b_j^y b_k^y)(i b_j^x b_i^x) = - b_j^y b_k^y b_j^x b_i^x = - b_j^y (-b_j^x b_k^y) b_i^x = b_j^y b_j^x b_k^y b_i^x = - b_j^x b_j^y b_i^x b_k^y.
+\end{align}
+Wait! Let us trace the swaps carefully:
+$b_k^y$ anticommutes with $b_j^x$ (diff flavour) $\to$ 1 sign.
+$b_j^y$ anticommutes with $b_j^x$ (diff flavour) $\to$ 1 sign.
+$b_k^y$ anticommutes with $b_i^x$ (diff site) $\to$ 1 sign.
+Total 3 anticommutations $\to (-1)^3 = -1$.
+Combined with the explicit $-1$ from $i^2$:
+\begin{equation}
+    u_{ji} u_{jk} = u_{jk} u_{ji} \implies [u_{ji}, u_{jk}] = 0.
+\end{equation}
+The bond operators commute among themselves!
+
+Now, the Hamiltonian in the Majorana basis takes the quadratic form:
+\begin{equation}
+    H = \frac{i}{4} \sum_{\langle j,k \rangle} A_{jk} c_j c_k, \quad \text{where } A_{jk} = 2 J_\alpha u_{jk}.
+\end{equation}
+
+
+\section*{4. $[u_{jk}, H] = 0$ and the Physical Projection Operator}
+
+We need to show $[u_{jk}, H] = 0$ for $u_{jk}$ to be constants of motion.
+For any term $c_l c_m$ in $H$, since $c$-Majoranas are a different flavour from the localized $b$-Majoranas in $u_{jk}$, each $c$ operator anticommutes past $b_j^\alpha$ and $b_k^\alpha$. Two anticommutations lead to a positive sign:
+\begin{equation}
+    [u_{jk}, c_l c_m] = 0 \implies [u_{jk}, H] = 0.
+\end{equation}
+Thus, $u_{jk}$ are constants of motion!
+
+To justify the terminology of $\mathbb{Z}_2$ gauge field, we must first isolate the projection operator at each $j$-site that takes us into the appropriate 2D Hilbert space (physical state) from the 4D Majorana Hilbert space. To do this, we require a physical constraint.
+
+The spin operator identity $\sigma_j^x \sigma_j^y \sigma_j^z = i$ is a good candidate, as it involves all Paulis on a site.
+Substituting the Majorana description:
+\begin{align}
+    (i b_j^x c_j)(i b_j^y c_j)(i b_j^z c_j) &= i \nonumber \\
+    -i (b_j^x c_j b_j^y c_j)(b_j^z c_j) &= i \nonumber \\
+    -(b_j^x b_j^y c_j^2)(b_j^z c_j) &= 1 \nonumber \\
+    b_j^x b_j^y b_j^z c_j &= 1.
+\end{align}
+This must hold for physical states! We define this as a projection operator on each site:
+\begin{equation}
+    D_j = b_j^x b_j^y b_j^z c_j.
+\end{equation}
+Essentially, $|\psi\rangle$ is a valid physical state if it is an eigenstate of $D_j$ with eigenvalue $+1$ for all sites $j$.
+
+Let us first represent $D_j$ in the intermediate 2-flavour Dirac fermion representation:
+\begin{align}
+    D_j &= b_j^x b_j^y b_j^z c_j \nonumber \\
+    &= \left[\frac{-i}{\sqrt{2}}(d_{1,j}-d_{1,j}^\dagger)\right] \left[\frac{1}{\sqrt{2}}(d_{2,j}+d_{2,j}^\dagger)\right] \left[\frac{-i}{\sqrt{2}}(d_{2,j}-d_{2,j}^\dagger)\right] \left[\frac{1}{\sqrt{2}}(d_{1,j}+d_{1,j}^\dagger)\right] \nonumber \\
+    &= -\frac{1}{4} (d_{1,j}-d_{1,j}^\dagger)(d_{2,j}+d_{2,j}^\dagger)(d_{2,j}-d_{2,j}^\dagger)(d_{1,j}+d_{1,j}^\dagger) \nonumber \\
+    &= (1 - 2d_{1,j}^\dagger d_{1,j})(1 - 2d_{2,j}^\dagger d_{2,j}).
+\end{align}
+
+Evaluating $D_j$ on Fock states in $d$-fermion occupation number representation:
+\begin{align}
+    D_j |0,0\rangle_j &= +1 |0,0\rangle_j \quad \text{(Physical, Even particle sector)} \\
+    D_j |1,1\rangle_j &= +1 |1,1\rangle_j \quad \text{(Physical, Even particle sector)} \\
+    D_j |1,0\rangle_j &= -1 |1,0\rangle_j \quad \text{(Unphysical, Odd particle sector)} \\
+    D_j |0,1\rangle_j &= -1 |0,1\rangle_j \quad \text{(Unphysical, Odd particle sector)}
+\end{align}
+
+So, acting with $\frac{1+D_j}{2}$ on this space preserves even sector states ($D_j$ sends them to 1) and zeroes out odd sector states ($D_j$ sends them to $-1$).
+The global projector is:
+\begin{equation}
+    P = \prod_{j} \left( \frac{1 + D_j}{2} \right).
+\end{equation}
+
+\paragraph{How does $D_j$ interact with $u_{jk}$?}
+\begin{equation}
+    D_j u_{jk} = (b_j^x b_j^y b_j^z c_j) (i b_j^\alpha b_k^\alpha).
+\end{equation}
+- $b_k^\alpha$ (different site): 4 anticommutations with $b_j^x, b_j^y, b_j^z, c_j \to (+1)$.
+- $c_j$: 1 anticommulation with $b_j^\alpha \to (-1)$.
+- $b_j^\alpha$: commutes with itself, 2 anticommutations with other two $b$-flavours $\to (+1)$.
+Net result: $D_j u_{jk} + u_{jk} D_j = 0 \implies \{u_{jk}, D_j\} = 0$.
+
+This means $u_{jk}$ is not gauge-invariant, i.e., it is not a physical observable, and there will be different sets of $u_{jk}$ that lead to the same physical states. They form a $\mathbb{Z}_2$ gauge field.
+
+
+\section*{5. Bilinear Form and Space Dimension Counting}
+
+Thus, the Hamiltonian can now be written as:
+\begin{equation}
+    H = \Phi^T H([u]) \Phi,
+\end{equation}
+where $\Phi = (c_1, c_2, \dots, c_N)^T$, and $H([u])$ is an $N \times N$ matrix that depends only on the values of $u_{jk}$. (Exactly 3 numbers per row in the matrix give Hamiltonian hopping amplitudes). This is a tight-binding Hamiltonian of itinerant Majoranas coupled to $u_{jk}$ on the bonds.
+
+\paragraph{Hilbert Space Dimension Counting:}
+How do we build the honeycomb lattice? Take an $A$-$B$ sublattice basis connected by a $z$-bond. Translate by unit vectors $\vec{a}_1 = \sqrt{3}\hat{x}$ and $\vec{a}_2 = -\frac{\sqrt{3}}{2}\hat{x} + \frac{3}{2}\hat{y}$.
+
+Originally, let us assume $N$ spins on the lattice.
+Originally we have a $2^N \times 2^N$ matrix (Hamiltonian in Pauli basis) that we need to solve.
+In the Majorana basis, we end up with 4 Majoranas per site, and thus a $4^N \times 4^N$ problem.
+
+Look at it from the POV of the gauge field. The subsequent projection $D_j = +1$ at each site halves the state dimension ($4 \to 2$ per site), giving $(2^2)^N / 2^N = 2^N$ physical dimension as expected.
+
+\paragraph{Plaquette Operators (Wilson Loops):}
+Let us define an index $p$ for each hexagon plaquette. We define:
+\begin{equation}
+    W_p = \sigma_1^y \sigma_2^z \sigma_3^x \sigma_4^y \sigma_5^z \sigma_6^x = \prod_{\langle j,k \rangle \in \partial p} u_{jk}.
+\end{equation}
+$W_p^2 = 1 \implies W_p$ has eigenvalues $\pm 1$.
+$[W_p, H] = 0$ and $[W_p, W_q] = 0$. So, $W_p$'s and $u_{ij}$'s form the relevant integrals of motion in the Kitaev model.
+
+
+\section*{6. Direct Sum Partitioning and Block-Diagonality Proof}
+
+By the spectral theorem, the full extended Hilbert space may be partitioned into a direct sum over simultaneous eigenspaces:
+\begin{equation}
+    H = \bigoplus_{u} H_u.
+\end{equation}
+Each subspace $H_u$ is spanned by states sharing the exact same background gauge field $u = \{u_{ij}\}$.
+
+\paragraph{Proof that $H$ is Block Diagonal across Gauge Sectors:}
+Let $|\psi_u\rangle$ and $|\psi_{u'}\rangle$ be eigenvectors of link operators $\hat{u}_{ij}$, differing at least at one bond $\langle K,L \rangle$ such that $u_{KL}' = -u_{KL}$:
+\begin{equation}
+    \hat{u}_{ij} |\psi_u\rangle = u_{ij} |\psi_u\rangle, \quad \hat{u}_{ij} |\psi_{u'}\rangle = u_{ij}' |\psi_{u'}\rangle.
+\end{equation}
+
+We evaluate the matrix element $\langle \psi_{u'} | \hat{u}_{KL} H | \psi_u \rangle$:
+\begin{align}
+    \langle \psi_{u'} | \hat{u}_{KL} H | \psi_u \rangle &= (\hat{u}_{KL} |\psi_{u'}\rangle)^\dagger H |\psi_u\rangle = u_{KL}' \langle \psi_{u'} | H | \psi_u \rangle.
+\end{align}
+Alternatively, using $[\hat{u}_{KL}, H] = 0$:
+\begin{align}
+    \langle \psi_{u'} | \hat{u}_{KL} H | \psi_u \rangle &= \langle \psi_{u'} | H \hat{u}_{KL} | \psi_u \rangle = u_{KL} \langle \psi_{u'} | H | \psi_u \rangle.
+\end{align}
+Equating the two:
+\begin{equation}
+    u_{KL}' \langle \psi_{u'} | H | \psi_u \rangle = u_{KL} \langle \psi_{u'} | H | \psi_u \rangle \implies (u_{KL}' - u_{KL}) \langle \psi_{u'} | H | \psi_u \rangle = 0.
+\end{equation}
+Since $u_{KL}' \neq u_{KL}$, we have $u_{KL}' - u_{KL} = -2u_{KL} \neq 0$. Therefore:
+\begin{equation}
+    \langle \psi_{u'} | H | \psi_u \rangle = 0.
+\end{equation}
+This proves $H$ is strictly block diagonal!
+
+
+\section*{7. Lieb's Theorem and Projection to Physical Space}
+
+What flux distribution of $W_p$'s yields the ground state?
+
+\paragraph{Lieb's Theorem:}
+For tri-coordinated lattices possessing appropriate mirror symmetries, the flux through each elementary plaquette in the absolute ground state is constrained:
+\begin{itemize}
+    \item Plaquettes of length $2 \pmod 4$ carry zero flux, or $W_p = +1$.
+    \item Plaquettes of length $0 \pmod 4$ carry $\pi$-flux, or $W_p = -1$.
+\end{itemize}
+The honeycomb plaquette has 6 vertices ($6 \equiv 2 \pmod 4$). Thus, the ground state of the Kitaev honeycomb model must have $W_p = +1$ (vortex-free sector).
+An easy choice is to set $u_{ij} = +1$ for all bonds $\langle i,j \rangle$.
+
+\paragraph{Projecting Back to Physical Space:}
+Let $|\Psi\rangle_{\text{ext}}$ be a state in the extended space corresponding to the zero-vortex $u_{ij} = +1$ configuration. Then the physical state is derived as:
+\begin{equation}
+    |\Psi\rangle_{\text{phys}} = P |\Psi\rangle_{\text{ext}}.
+\end{equation}
+
+
+\section*{8. Complete Diagonalization of $A[u]$ via $SO(2N)$}
+
+For a chosen background $u$, the itinerant $c$-Majorana Hamiltonian is:
+\begin{equation}
+    H = \frac{i}{4} \sum_{j,k} A_{jk}[u] c_j c_k,
+\end{equation}
+where $A[u]$ is a real, anti-symmetric $2N \times 2N$ matrix ($A^T = -A$).
+
+Since $A$ is real and anti-symmetric, $iA[u]$ is Hermitian. Its non-zero eigenvalues occur in equal and opposite pairs $\pm \epsilon_m$ ($\epsilon_m > 0$).
+
+Let $\Psi_m$ be an eigenvector of $iA[u]$ with eigenvalue $\epsilon_m$:
+\begin{equation}
+    i A \Psi_m = \epsilon_m \Psi_m \implies A \Psi_m = -i \epsilon_m \Psi_m.
+\end{equation}
+Decomposing $\Psi_m$ into real and imaginary parts $u_m, v_m \in \mathbb{R}^{2N}$:
+\begin{equation}
+    \Psi_m = u_m + i v_m.
+\end{equation}
+Substituting:
+\begin{equation}
+    A (u_m + i v_m) = -i \epsilon_m (u_m + i v_m) = \epsilon_m v_m - i \epsilon_m u_m.
+\end{equation}
+Equating real and imaginary parts:
+\begin{align}
+    A u_m &= \epsilon_m v_m, \\
+    A v_m &= -\epsilon_m u_m.
+\end{align}
+
+Thus, $A$ acts on the 2D real subspace spanned by $\{u_m, v_m\}$ and maps them into each other.
+We construct a real $2N \times 2N$ matrix $Q \in SO(2N)$ using $u_m$ and $v_m$ as columns:
+\begin{equation}
+    Q = \begin{pmatrix} \sqrt{2} u_1 & \sqrt{2} v_1 & \sqrt{2} u_2 & \sqrt{2} v_2 & \dots & \sqrt{2} u_N & \sqrt{2} v_N \end{pmatrix}.
+\end{equation}
+
+Evaluating $Q^T A Q$ in the $m$-th $2 \times 2$ block:
+\begin{align}
+    \begin{pmatrix} u_m^T A u_m & u_m^T A v_m \\ v_m^T A u_m & v_m^T A v_m \end{pmatrix} &= \begin{pmatrix} u_m^T (\epsilon_m v_m) & u_m^T (-\epsilon_m u_m) \\ v_m^T (\epsilon_m v_m) & v_m^T (-\epsilon_m u_m) \end{pmatrix} \nonumber \\
+    &= \begin{pmatrix} 0 & -\epsilon_m \\ \epsilon_m & 0 \end{pmatrix}.
+\end{align}
+Reordering basis columns brings $A$ to canonical skew-symmetric form:
+\begin{equation}
+    Q^T A Q = \bigoplus_{m=1}^N \begin{pmatrix} 0 & \epsilon_m \\ -\epsilon_m & 0 \end{pmatrix}.
+\end{equation}
+
+Transforming $c_j$ into normal mode Majoranas $f_k = \sum_j c_j Q_{jk}$, the Hamiltonian pairs up as:
+\begin{equation}
+    H = \frac{i}{2} \sum_{m=1}^N \epsilon_m f_{2m-1} f_{2m}.
+\end{equation}
+
+Finally, defining complex Dirac fermions:
+\begin{equation}
+    a_m = \frac{1}{2} (f_{2m-1} + i f_{2m}),
+\end{equation}
+the Hamiltonian becomes diagonal in the occupation number basis of $a$-fermions:
+\begin{equation}
+    H = \sum_{m=1}^N \epsilon_m \left( a_m^\dagger a_m - \frac{1}{2} \right),
+\end{equation}
+with ground state energy $E_0 = -\frac{1}{2} \sum_{m=1}^N \epsilon_m$.
+
+\end{document}
