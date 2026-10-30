@@ -1,0 +1,1 @@
+Please note that many of the .tex files are created using Gemini4-Flash and/or Qwen-2.5 on my handwritten notes.
