@@ -1,0 +1,270 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[a4paper, margin=2.5cm]{geometry}
+\usepackage{amsmath, amssymb, mathtools}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+
+% Preamble: Custom tcolorbox for side-notes/arrows found in the handwritten notes
+\newtcolorbox{sidenote}[1][]{
+    colback=blue!5!white,
+    colframe=blue!75!black,
+    fonttitle=\bfseries,
+    title={#1},
+    boxsep=2mm,
+    arc=2mm
+}
+
+% Preamble: Custom tcolorbox for independent math verification and error flagging
+\newtcolorbox{mathwarning}[1][]{
+    colback=red!5!white,
+    colframe=red!75!black,
+    fonttitle=\bfseries,
+    title={[MATH ERROR / CORRECTION] #1},
+    boxsep=2mm,
+    arc=2mm
+}
+
+\begin{document}
+
+Continuing from N2 (Kitaev Honeycomb main note), here are a few (algebraic) justifications $\rightarrow$
+
+\vspace{0.5cm}
+\noindent\textbf{Hamiltonian:}
+We have the itinerant $c$-Majorana Hamiltonian:
+\begin{equation*}
+H = \frac{i}{4} \sum_{j,k} A_{jk} c_j c_k
+\end{equation*}
+$A$ is: Real, AntiSymmetric ($A^T = -A$), of dimension $2N \times 2N$.
+
+\begin{sidenote}[Marginal Note: Why is $A$ antisymmetric?]
+Remember that $A_{jk} = i b_j^\alpha b_k^\alpha$ (with $\alpha$ being dependent on the $j-k$ bond type). Since the $b$-Majoranas on different sites anticommute, $\{b_j^\alpha, b_k^\alpha\} = 0$ for $j \neq k$:
+\begin{align*}
+A_{jk} &= i b_j^\alpha b_k^\alpha \\
+&= -i b_k^\alpha b_j^\alpha \\
+&= -A_{kj}
+\end{align*}
+Also, we can directly demand this as otherwise the Hamiltonian will not be Hermitian.
+\end{sidenote}
+
+\noindent Let us continue. Define a new Hermitian matrix, $M = iA$.
+Note:
+\begin{equation*}
+M^\dagger = (iA)^\dagger = -iA^T = iA = M 
+\end{equation*}
+$\implies$ eigenvalues of $M$ are real.
+
+Let us define some eigenvector $|\Psi_m\rangle \in \mathbb{C}^{2N}$, i.e. a state in the extended Hilbert space, that is an eigenvector of $M$:
+\begin{align*}
+M|\Psi_m\rangle &= \epsilon_m|\Psi_m\rangle \\
+\implies iA|\Psi_m\rangle &= \epsilon_m|\Psi_m\rangle \\
+\implies A|\Psi_m\rangle &= -i\epsilon_m|\Psi_m\rangle
+\end{align*}
+Take complex conjugate on both sides:
+\begin{align*}
+(A|\Psi_m\rangle)^* &= (-i\epsilon_m|\Psi_m\rangle)^* \\
+\implies A^*|\Psi_m^*\rangle &= i\epsilon_m|\Psi_m^*\rangle
+\end{align*}
+Since $A$ is real ($A^* = A$), this becomes:
+\begin{align*}
+A|\Psi_m^*\rangle &= i\epsilon_m|\Psi_m^*\rangle \\
+\implies iA|\Psi_m^*\rangle &= -\epsilon_m|\Psi_m^*\rangle \\
+\implies M|\Psi_m^*\rangle &= -\epsilon_m|\Psi_m^*\rangle
+\end{align*}
+So, the eigenvalues of $M$ arrive in $\pm \epsilon_m$ pairs.
+
+Now, we decompose the $|\Psi_m\rangle$ vector into two real vectors $|u_m\rangle, |v_m\rangle \in \mathbb{R}^{2N}$:
+\begin{equation*}
+|\Psi_m\rangle = |u_m\rangle + i|v_m\rangle
+\end{equation*}
+Put this into the eigenvalue equation for $|\Psi_m\rangle$:
+\begin{align*}
+iA(|u_m\rangle + i|v_m\rangle) &= \epsilon_m(|u_m\rangle + i|v_m\rangle) \\
+\implies iA|u_m\rangle - A|v_m\rangle &= \epsilon_m|u_m\rangle + i\epsilon_m|v_m\rangle
+\end{align*}
+Rearranging to separate real and imaginary components:
+\begin{equation*}
+-A|v_m\rangle + i(A|u_m\rangle) = \epsilon_m|u_m\rangle + i(\epsilon_m|v_m\rangle)
+\end{equation*}
+Comparing real and imaginary parts:
+\begin{align*}
+A|u_m\rangle &= \epsilon_m|v_m\rangle \\
+A|v_m\rangle &= -\epsilon_m|u_m\rangle
+\end{align*}
+Clearly the matrix $A$ acts like a rotation operation on the space spanned by $\{|u_m\rangle, |v_m\rangle\}$.
+
+Assume that $|\Psi_m\rangle$ is normalized, i.e., $\langle\Psi_m|\Psi_m\rangle = 1$:
+\begin{align*}
+\implies \langle\Psi_m|\Psi_m\rangle &= (\langle u_m| - i\langle v_m|)(|u_m\rangle + i|v_m\rangle) \\
+&= \langle u_m|u_m\rangle + i\langle u_m|v_m\rangle - i\langle v_m|u_m\rangle + \langle v_m|v_m\rangle = 1 \\
+\implies 1 &= [\langle u_m|u_m\rangle + \langle v_m|v_m\rangle] + i[\langle u_m|v_m\rangle - \langle v_m|u_m\rangle]
+\end{align*}
+Since the imaginary part must vanish,
+\begin{equation*}
+\langle u_m|v_m\rangle = \langle v_m|u_m\rangle
+\end{equation*}
+
+\vspace{0.5cm}
+\noindent\textbf{Proving orthogonality $\rightarrow$} \\
+Take the action of $A$ on $|u_m\rangle$:
+\begin{align*}
+A|u_m\rangle &= \epsilon_m|v_m\rangle \\
+\langle u_m|A|u_m\rangle &= \epsilon_m\langle u_m|v_m\rangle
+\end{align*}
+Since $A$ is anti-symmetric, all diagonal elements must vanish $\implies$ LHS is zero.
+\begin{equation*}
+\implies \epsilon_m\langle u_m|v_m\rangle = 0 \implies \langle u_m|v_m\rangle = 0 \quad (\text{As } \epsilon_m \neq 0)
+\end{equation*}
+
+\vspace{0.5cm}
+\noindent\textbf{Proving that the norms of $|u_m\rangle$ and $|v_m\rangle$ are equal $\rightarrow$} \\
+Use the same equation for the action of $A$ on $|u_m\rangle$:
+\begin{align*}
+A|u_m\rangle &= \epsilon_m|v_m\rangle \\
+\implies \langle v_m|A|u_m\rangle &= \epsilon_m\langle v_m|v_m\rangle
+\end{align*}
+Expanding the LHS using the antisymmetry of $A$ ($A^T = -A$) and reality of the vectors:
+\begin{equation*}
+\langle v_m|A|u_m\rangle = \langle u_m|A^T|v_m\rangle^* = -\langle u_m|A|v_m\rangle
+\end{equation*}
+Substitute $A|v_m\rangle = -\epsilon_m|u_m\rangle$ into this expression:
+\begin{equation*}
+-\langle u_m|A|v_m\rangle = -\langle u_m|(-\epsilon_m|u_m\rangle) = \epsilon_m\langle u_m|u_m\rangle
+\end{equation*}
+Equating the two results for $\langle v_m|A|u_m\rangle$:
+\begin{equation*}
+\implies \epsilon_m\langle u_m|u_m\rangle = \epsilon_m\langle v_m|v_m\rangle
+\end{equation*}
+\begin{equation*}
+\implies \langle u_m|u_m\rangle = \langle v_m|v_m\rangle = \frac{1}{2} \quad (\text{see Before: } \langle u_m|u_m\rangle + \langle v_m|v_m\rangle = 1)
+\end{equation*}
+\begin{equation*}
+\implies \|u_m\|^2 = \|v_m\|^2 = \frac{1}{2}
+\end{equation*}
+i.e., the normalized real vectors here are $\sqrt{2}|u_m\rangle$ and $\sqrt{2}|v_m\rangle$.
+
+\vspace{0.5cm}
+Since we have motivated how $A$ acts like a rotation in $2N$-dim real space, we seek to rotate our (real) basis to arrive at the required block-diag form of $A$. We create a matrix $Q \in SO(2N)$ with the appropriate real vectors as columns:
+\begin{equation*}
+Q = \Big( \sqrt{2}|u_1\rangle \quad \sqrt{2}|v_1\rangle \quad \sqrt{2}|u_2\rangle \quad \dots \quad \sqrt{2}|u_N\rangle \quad \sqrt{2}|v_N\rangle \Big)
+\end{equation*}
+We perform the transform $Q^T A Q$, and focus on the $m$-th $2\times 2$ block (Say, $B_m$ be the submatrix):
+\begin{equation*}
+B_m = 2 \begin{pmatrix}
+\langle u_m|A|u_m\rangle & \langle u_m|A|v_m\rangle \\
+\langle v_m|A|u_m\rangle & \langle v_m|A|v_m\rangle
+\end{pmatrix}
+\end{equation*}
+We already know the action of $A$ on these real vectors:
+\begin{align*}
+\langle u_m|A|u_m\rangle &= 0 \\
+\langle v_m|A|v_m\rangle &= 0 \\
+\langle v_m|A|u_m\rangle &= \langle v_m|\epsilon_m|v_m\rangle = \epsilon_m \left(\frac{1}{2}\right) = \frac{\epsilon_m}{2} \\
+\langle u_m|A|v_m\rangle &= \langle u_m|-\epsilon_m|u_m\rangle = -\epsilon_m \left(\frac{1}{2}\right) = -\frac{\epsilon_m}{2}
+\end{align*}
+So,
+\begin{equation*}
+B_m = 2 \begin{pmatrix} 0 & -\epsilon_m/2 \\ \epsilon_m/2 & 0 \end{pmatrix} = \begin{pmatrix} 0 & -\epsilon_m \\ \epsilon_m & 0 \end{pmatrix}
+\end{equation*}
+This is skew-symmetric $\rightarrow$ To make it diagonal, all we need to do is reorder the real vector basis, i.e. $(\sqrt{2}|v_m\rangle, \sqrt{2}|u_m\rangle)$ instead of the other way around.
+
+With this in mind, we define normal-mode Majorana operators by combining the $c$-Majorana operators via $Q \in SO(2N)$:
+\begin{equation*}
+f_k = \sum_{j=1}^{2N} c_j Q_{jk}
+\end{equation*}
+Which is easily invertible:
+\begin{equation*}
+c_j = \sum_{p=1}^{2N} Q_{jp} f_p
+\end{equation*}
+
+Verify that $f_k$'s still obey Majorana anticommutation relation $\rightarrow$:
+\begin{align*}
+\{f_k, f_l\} &= \sum_{j=1}^{2N} \sum_{m=1}^{2N} Q_{jk} Q_{ml} \{c_j, c_m\} \\
+&= \sum_{j=1}^{2N} \sum_{m=1}^{2N} Q_{jk} Q_{ml} (2\delta_{jm}) \\
+&= 2 \sum_{j=1}^{2N} Q_{jk} Q_{jl} \\
+&= 2 (Q^T Q)_{kl}
+\end{align*}
+Since $Q \in SO(2N)$, $Q^T Q = \mathbb{I}$, so $(Q^T Q)_{kl} = \delta_{kl}$. Thus, $\{f_k, f_l\} = 2\delta_{kl}$, which satisfies the condition.
+So, we can conclude that $f_k$ are valid Majorana operators, and $f_k^\dagger \equiv f_k$, $f_k^2 = 1$.
+
+We put the defining expression for these normal modes into the itinerant $c$-Majorana Hamiltonian, i.e., put $c_j = \sum_{p=1}^{2N} Q_{jp} f_p$ into:
+\begin{equation*}
+H = \frac{i}{4} \sum_{j,k=1}^{2N} A_{jk} c_j c_k
+\end{equation*}
+We get:
+\begin{align*}
+H &= \frac{i}{4} \sum_{j,k=1}^{2N} A_{jk} \left(\sum_{p=1}^{2N} Q_{jp} f_p\right) \left(\sum_{q=1}^{2N} Q_{kq} f_q\right) \\
+&= \frac{i}{4} \sum_{p,q=1}^{2N} \left( \sum_{j,k=1}^{2N} Q_{jp} A_{jk} Q_{kq} \right) f_p f_q \\
+\implies H &= \frac{i}{4} \sum_{p,q=1}^{2N} (Q^T A Q)_{pq} f_p f_q
+\end{align*}
+Using the block-diagonal form of $A$ in the appropriately ordered real vector basis, we can write:
+\begin{equation*}
+(Q^T A Q)_{pq} = 
+\begin{cases} 
+\epsilon_m, & \text{for } p = \text{odd}, q = \text{even} \\
+-\epsilon_m, & \text{for } p = \text{even}, q = \text{odd} \\
+0, & \text{otherwise}
+\end{cases}
+\end{equation*}
+This means:
+\begin{enumerate}
+    \item If $p = 2m-1, q = 2m \implies (Q^T A Q)_{pq} = \epsilon_m$
+    \item If $p = 2m, q = 2m-1 \implies (Q^T A Q)_{pq} = -\epsilon_m$
+\end{enumerate}
+
+We may restate the sum in the Hamiltonian (over $p, q$) as a sum over all modes $m \in \{1 \dots N\}$:
+\begin{align*}
+H &= \frac{i}{4} \sum_{m=1}^{N} \left[ (Q^T A Q)_{2m-1, 2m} f_{2m-1} f_{2m} + (Q^T A Q)_{2m, 2m-1} f_{2m} f_{2m-1} \right] \\
+&= \frac{i}{4} \sum_{m=1}^{N} \left[ \epsilon_m f_{2m-1} f_{2m} - \epsilon_m f_{2m} f_{2m-1} \right]
+\end{align*}
+Using the Majorana anticommutation on the 2nd term ($f_{2m}f_{2m-1} = -f_{2m-1}f_{2m}$):
+\begin{align*}
+\implies H &= \frac{i}{4} \sum_{m=1}^{N} \left[ \epsilon_m f_{2m-1} f_{2m} + \epsilon_m f_{2m-1} f_{2m} \right] \\
+&= \frac{i}{2} \sum_{m=1}^{N} \epsilon_m f_{2m-1} f_{2m}
+\end{align*}
+
+As the final step, we re-form complex Dirac fermions from the real Majorana fermions!
+
+
+Why this choice? Let us check if it recovers the standard fermionic anticommutation:
+\begin{align*}
+\{a_m, a_n^\dagger\} &= \frac{1}{4} \{f_{2m-1} + i f_{2m}, f_{2n-1} - i f_{2n}\} \\
+&= \frac{1}{4} \Big( \{f_{2m-1}, f_{2n-1}\} - i\{f_{2m-1}, f_{2n}\} + i\{f_{2m}, f_{2n-1}\} + \{f_{2m}, f_{2n}\} \Big)
+\end{align*}
+Now, if $m = n$, only the 1st and 4th terms survive (since cross terms anticommute to $0$):
+\begin{equation*}
+\{a_m, a_m^\dagger\} = \frac{1}{4} [2 + 0 + 0 + 2] = 1 \quad (\text{if } m=n)
+\end{equation*}
+Otherwise, all terms vanish.
+\begin{equation*}
+\implies \{a_m, a_n^\dagger\} = \delta_{m,n}
+\end{equation*}
+Which is the expected relation. \\
+Note that swapping the odd and even indices in the definition of $a_m$ does not change anything. We have freedom of choice there.
+
+The number operator for the $a$-complex fermions is then:
+\begin{align*}
+a_m^\dagger a_m &= \frac{1}{4}(f_{2m-1} - i f_{2m})(f_{2m-1} + i f_{2m}) \\
+&= \frac{1}{4}(f_{2m-1}^2 + i f_{2m-1} f_{2m} - i f_{2m} f_{2m-1} + f_{2m}^2)
+\end{align*}
+Using properties of $f$-Majoranas ($f_k^2 = 1$ and $f_j f_k = -f_k f_j$ for $j \neq k$):
+\begin{align*}
+\implies a_m^\dagger a_m &= \frac{1}{4}(1 + 1 + 2i f_{2m-1} f_{2m}) \\
+&= \frac{1}{2} + \frac{i}{2} f_{2m-1} f_{2m}
+\end{align*}
+So, inverting this:
+\begin{equation*}
+\hookrightarrow \frac{i}{2} f_{2m-1} f_{2m} = a_m^\dagger a_m - \frac{1}{2}
+\end{equation*}
+
+Put this into the expression of the Hamiltonian that we last derived:
+\begin{align*}
+H &= \sum_{m=1}^{N} \epsilon_m \left( \frac{i}{2} f_{2m-1} f_{2m} \right) \\
+\implies H &= \sum_{m=1}^{N} \epsilon_m \left( a_m^\dagger a_m - \frac{1}{2} \right)
+\end{align*}
+Which is our diagonalized Hamiltonian!
+
+\vspace{0.5cm}
+\noindent\textbf{Note:} The ground state energy is $E_0 = -\frac{1}{2} \sum_{m=1}^{N} \epsilon_m$
+
+\end{document}
